@@ -1,46 +1,60 @@
 backend:
   name: git-gateway
+  repo: JohnYang02182/johnportfolio-content
   branch: main
 
 media_folder: public/uploads
 public_folder: /uploads
 
+i18n:
+  structure: multiple_folders
+  locales: [zh-TW, en, ja]
+  default_locale: zh-TW
+
 collections:
-  - name: projects_zh_tw
-    label: Projects (zh-TW)
-    folder: content/projects/zh-TW
+  # 文章內文：存成 .md（僅 body）
+  - name: projects
+    label: Projects
+    folder: content/projects
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    format: frontmatter
+    slug: "{{fields.name}}"
+    format: markdown
     extension: md
+    i18n: true
     fields:
-      - { label: Title, name: title, widget: string }
-      - { label: Date, name: date, widget: datetime }
-      - { label: Summary, name: summary, widget: text, required: false }
-      - { label: Body, name: body, widget: markdown }
+      - { label: Body, name: body, widget: markdown, i18n: true }
 
-  - name: projects_en
-    label: Projects (en)
-    folder: content/projects/en
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    format: frontmatter
-    extension: md
-    fields:
-      - { label: Title, name: title, widget: string }
-      - { label: Date, name: date, widget: datetime }
-      - { label: Summary, name: summary, widget: text, required: false }
-      - { label: Body, name: body, widget: markdown }
+  # 卡片資料：存成 JSON，前台透過 API 取得
+  - name: projects_data
+    label: Projects Data
+    files:
+      - name: projects_zh_tw
+        label: Projects Index (zh-TW)
+        file: content/data/zh-TW/projects.json
+        fields: &card_fields
+          - label: Projects
+            name: projects
+            widget: list
+            fields:
+              - { label: "Name (唯一識別碼)", name: name, widget: string }
+              - { label: Banner Image, name: bannerImg, widget: image }
+              - { label: "Title (i18n key)", name: title, widget: string }
+              - { label: Link, name: link, widget: string, required: false }
+              - { label: "Team (i18n key)", name: team, widget: string }
+              - { label: Period, name: period, widget: string }
+              - { label: "Character (i18n key)", name: character, widget: string }
+              - label: Tags
+                name: tags
+                widget: list
+                field: { label: Tag, name: tag, widget: string }
+              - { label: Side Project, name: sideProject, widget: boolean, default: false }
 
-  - name: projects_ja
-    label: Projects (ja)
-    folder: content/projects/ja
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    format: frontmatter
-    extension: md
-    fields:
-      - { label: Title, name: title, widget: string }
-      - { label: Date, name: date, widget: datetime }
-      - { label: Summary, name: summary, widget: text, required: false }
-      - { label: Body, name: body, widget: markdown }
+      - name: projects_en
+        label: Projects Index (en)
+        file: content/data/en/projects.json
+        fields: *card_fields
+
+      - name: projects_ja
+        label: Projects Index (ja)
+        file: content/data/ja/projects.json
+        fields: *card_fields
