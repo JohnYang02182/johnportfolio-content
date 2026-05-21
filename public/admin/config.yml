@@ -2,7 +2,7 @@ backend:
   name: github
   repo: JohnYang02182/johnportfolio-content
   branch: main
-  auth_endpoint: https://oauth.sveltia.app/authorize
+  base_url: https://oauth.sveltia.app
   app_id: Ov23liWgQyx8DigTexuR
 
 media_folder: public/uploads
