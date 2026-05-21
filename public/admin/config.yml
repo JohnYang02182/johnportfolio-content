@@ -1,5 +1,5 @@
 backend:
-  name: git-gateway
+  name: github
   repo: JohnYang02182/johnportfolio-content
   branch: main
 
