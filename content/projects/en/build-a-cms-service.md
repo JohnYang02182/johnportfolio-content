@@ -1,16 +1,16 @@
 ---
 name: Build a CMS service
 bannerImg: /uploads/CMS_banner.png
-title: Build a CMS service
+title: 架設 Portfolio CMS
 link: ''
 team: Me
 period: '202605'
 character: Front-end Engineer
 tags:
-  - ''
-  - ''
-  - ''
-  - ''
+  - Git
+  - Vue3
+  - TypeScript
+  - Markdown
 sideProject: true
 ---
 

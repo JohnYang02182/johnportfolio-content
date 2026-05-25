@@ -17,7 +17,7 @@ sideProject: true
 # 描述
 
 現在的 projectDetail 內容管理是
-
+[:.text-primary]
 在 Google Sheets 新增內容 ⇒ 在專案呼叫透過 Google Sheets API 取得多語系的 .json 檔案 ⇒ 新增一個 view page 用 ${[key.name](http://key.name)} 的方式將內容顯示。
 
 #### 痛點:
