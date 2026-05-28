@@ -20,11 +20,12 @@ sideProject: true
 [:.text-primary]
 在 Google Sheets 新增內容 ⇒ 在專案呼叫透過 Google Sheets API 取得多語系的 .json 檔案 ⇒ 新增一個 view page 用 ${[key.name](http://key.name)} 的方式將內容顯示。
 
-#### 痛點:
-
+::: div {.content-wrapper}
+## 痛點:
 1. 每新增一次內容就會需要新增 view page，style 也需要調整。
 2. Google Sheets 不適合用來當作新增文章的編輯器。
 3. 調整內容過程複雜
+:::
 
 # Functional Requirements
 
