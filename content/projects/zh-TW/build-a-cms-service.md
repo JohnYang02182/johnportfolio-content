@@ -22,8 +22,9 @@ sideProject: true
 
 #### 痛點:
 
-- 每新增一次內容就會需要新增 view page，style 也需要調整。
-- Google Sheets 不適合用來當作新增文章的編輯器。
+1. 每新增一次內容就會需要新增 view page，style 也需要調整。
+2. Google Sheets 不適合用來當作新增文章的編輯器。
+3. 調整內容過程複雜
 
 # Functional Requirements
 
