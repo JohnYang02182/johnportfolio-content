@@ -22,8 +22,10 @@ sideProject: true
 
 #### 痛點:
 
+::: ul {.list-wrapper}
 - 每新增一次內容就會需要新增 view page，style 也需要調整。
 - Google Sheets 不適合用來當作新增文章的編輯器。
+:::
 
 # Functional Requirements
 
