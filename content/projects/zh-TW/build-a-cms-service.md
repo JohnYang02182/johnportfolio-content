@@ -96,9 +96,9 @@ export const designCardInfo: CardInfoDetail[] = [
     - [x] 暫時選用 Decap CMS，未來將 CMS 轉移至 Directus(Docker)
 - [ ] 選定開發步驟
     - [x] 新開 repo “portfolio-content”
-    - [ ] 設定 ~~Decap CMS~~ Sveltia CMS
-    - [ ] 在 GitHub 建立 OAuth App
-       - 前往 `GitHub → Settings → Developer settings → OAuth Apps → New OAuth App`欄位填入Application namejohnresume2023Homepage URL`https://你的網站網址`Authorization callback URL`https://你的網站網址/admin`取得 **Client ID** 和 **Client Secret**
+    - [x] 設定 ~~Decap CMS~~ Sveltia CMS
+    - [x] 在 GitHub 建立 OAuth App
+    - [x] 設定 Netlify 存取權限
 - [ ] 執行
 - [ ] Unit Test 與 E2E Test
 - [ ] Release
