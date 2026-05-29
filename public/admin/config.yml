@@ -3,12 +3,11 @@ backend:
   repo: JohnYang02182/johnportfolio-content
   branch: main
   commit_messages:
-    create: "content: add {{collection}} - {{slug}}"
-    update: "content: update {{collection}} - {{slug}}"
-    delete: "content: delete {{collection}} - {{slug}}"
-    uploadMedia: "content: upload media {{path}}"
-    deleteMedia: "content: delete media {{path}}"
-
+    create: '"content: add {{collection}} - {{slug}}" [skip netlify]'
+    update: '"content: update {{collection}} - {{slug}}" [skip netlify]'
+    delete: '"content: delete {{collection}} - {{slug}}" [skip netlify]'
+    uploadMedia: '"content: upload media {{path}}" [skip netlify]'
+    deleteMedia: '"content: delete media {{path}}" [skip netlify]'
 media_folder: public/uploads
 public_folder: /uploads
 
