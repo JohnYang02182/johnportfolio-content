@@ -22,19 +22,27 @@ sideProject: true
 
 ::: div {.content-wrapper}
 
-## 痛點:
+### 痛點:
 
 1. 每新增一次內容就會需要新增 view page，style 也需要調整。
 2. Google Sheets 不適合用來當作新增文章的編輯器。
 3. 調整內容過程複雜
 :::
 
-# Functional Requirements
+# 需求
 
-- 在 CMS 可以使用 .md 格式新增/編輯作品集內文內容。
-- 在 CMS 需要能夠儲存有日文、英文、繁體中文3語系的作品集內容。
-- 使用 RESTful API 將資料送到前端。
-- 在 CMS 能夠編輯/新增 projectList 與 projectDetial 的內容。
+### Functional Requirements
+
+- 在 CMS 必須能夠新增/編輯作品集內文內容。
+- 在 CMS 必須能夠編輯/新增/刪除 projectList 與 projectDetial 的內容。
+- CMS 必須有版本紀錄
+
+### Nonfunctional Requirements
+
+- 必須提供自動化 CICD ，部屬失敗率不能超過 90%
+- 必須能夠檢視平台的 Log
+- 必須切分 Preview 環境與 Product 環境
+- 內容格式必須是 Markdown 格式，結構含有 Metadata、Content
 
 #### API Format
 
