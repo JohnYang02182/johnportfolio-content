@@ -22,12 +22,11 @@ sideProject: true
 
 ::: div {.content-wrapper}
 
-### 痛點:
+### 問題:
 
 1. 每新增一次內容就會需要新增 view page，style 也需要調整。
 2. Google Sheets 不適合用來當作新增文章的編輯器。
 3. 調整內容過程複雜
-:::
 
 # 需求
 
@@ -94,14 +93,17 @@ export const designCardInfo: CardInfoDetail[] = [
 
 # 限制
 
-- 開發者(我)並非後端開發人員，太過複雜、規模龐大、需要深度後端知識的工具或開發工程無法執行。
-- 需要在 3 天內完成。
-- 積極考慮的使用現成已有的服務，但不考慮付費。
+- 積極考慮的使用現成已有的服務，但暫時不考慮付費。
+- 後端環境使用 Node.js。
+- 前端環境：
+    - TypeScript、Vue3 Composition API。
+    - 後續使用全端框架 NUXT 重構。
 
-# 流程
+# 解決問題
 
-- [x] 選定使用服務或是開發手段
-    - [x] 暫時選用 Decap CMS，未來將 CMS 轉移至 Directus(Docker)
+- 選定使用服務
+    - 使用 Cloudflare 設定前台與 CMS。
+    - 使用 
 - [ ] 選定開發步驟
     - [x] 新開 repo “portfolio-content”
     - [x] 設定 ~~Decap CMS~~ Sveltia CMS
