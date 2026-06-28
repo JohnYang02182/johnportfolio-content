@@ -22,7 +22,7 @@ sideProject: true
 
 以前の `projectDetail` のコンテンツ管理フローは以下の通りだった。
 
-```text
+```yaml
 Google Sheets に内容を追加する
 => プロジェクト側で Google Sheets API を呼び出し、多言語の `.json` ファイルを取得する
 => 新しい view page を追加し、style を調整して内容を表示する
