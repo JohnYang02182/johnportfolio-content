@@ -20,12 +20,11 @@ sideProject: true
 這個方式在資料量少、內容單純時很方便，但當 portfolio 內容開始變多且要顧及多語系的維護時，Google Sheets 很快就變得很不直覺。
 
 過去的 projectDetail 內容管理是
-
-\`\`\`
+```
 在 Google Sheets 新增內容 
 ⇒ 在專案呼叫透過 Google Sheets API 取得多語系的 .json 檔案 
 ⇒ 新增一個 view page 調整 Style 將內容顯示。
-\`\`\`
+```
 
 ::: div {.content-wrapper}
 

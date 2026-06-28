@@ -26,8 +26,8 @@ The previous `projectDetail` content management flow was:
 Add content in Google Sheets
 => Fetch multilingual `.json` files through the Google Sheets API in the project
 => Add a new view page and adjust the styles to display the content
-
 ```
+::: div {.content-wrapper}
 
 ### Problems
 

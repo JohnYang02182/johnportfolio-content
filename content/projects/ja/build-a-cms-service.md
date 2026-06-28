@@ -28,6 +28,8 @@ Google Sheets に内容を追加する
 => 新しい view page を追加し、style を調整して内容を表示する
 ```
 
+::: div {.content-wrapper}
+
 ### 問題点
 
 1. 内容を追加するたびに新しい view page を追加する必要があり、style の調整も必要だった。
