@@ -21,9 +21,11 @@ sideProject: true
 
 過去的 projectDetail 內容管理是
 
+\`\`\`
 在 Google Sheets 新增內容 
 ⇒ 在專案呼叫透過 Google Sheets API 取得多語系的 .json 檔案 
 ⇒ 新增一個 view page 調整 Style 將內容顯示。
+\`\`\`
 
 ::: div {.content-wrapper}
 
@@ -50,7 +52,7 @@ sideProject: true
 - detail page 依 slug 讀取對應文章
 - metadata 變成文章的一部分，例如 title、period、tags、bannerImg，像是以下：
 
-```
+```plain
 ---
 name: build-a-cms-service
 title: Build a CMS Service
@@ -58,14 +60,15 @@ bannerImg: /uploads/banner.png
 period: 2026
 character: Frontend Developer
 tags:
-  - Vue
-  - Cloudflare
-  - CMS
+    - Vue
+    - Cloudflare
+    - CMS
 sideProject: true
 ---
 ```
 
 #### 前端開發
+
 - 新增 CMS fetch API handler
 - 新增 Pagination Components
 - 新增 View 讓 Route 管理 static project 與 CMS project

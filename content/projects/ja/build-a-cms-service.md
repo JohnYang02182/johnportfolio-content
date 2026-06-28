@@ -59,9 +59,9 @@ bannerImg: /uploads/banner.png
 period: 2026
 character: Frontend Developer
 tags:
-  - Vue
-  - Cloudflare
-  - CMS
+    - Vue
+    - Cloudflare
+    - CMS
 sideProject: true
 ---
 ```
