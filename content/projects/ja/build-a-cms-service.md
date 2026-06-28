@@ -14,128 +14,66 @@ tags:
 sideProject: true
 ---
 
-## 説明
+### 概要
 
-現在の projectDetail のコンテンツ管理は、
+最初は、portfolio article をすべて Google Sheets で管理していた。
 
-Google Sheets にコンテンツを追加 ⇒ プロジェクト側で Google Sheets API を呼び出して多言語対応の .json ファイルを取得 ⇒ 新しい view page を追加し、`${key.name}` の形式でコンテンツを表示する、という流れになっています。
+この方法は、データ量が少なく、内容が単純な段階では便利だった。しかし、portfolio の内容が増え、多言語対応のメンテナンスも必要になると、Google Sheets での管理はすぐに直感的ではなくなった。
 
-#### 課題:
+以前の `projectDetail` のコンテンツ管理フローは以下の通りだった。
 
-- コンテンツを追加するたびに、新しい view page を追加する必要があり、style も調整する必要があります。
-- Google Sheets は記事を追加するためのエディターとしては適していません。
-
-# Functional Requirements
-
-- CMS で .md 形式を使用して、ポートフォリオ本文のコンテンツを追加／編集できること。
-- CMS で日本語、英語、繁体字中国語の3言語のポートフォリオコンテンツを保存できること。
-- RESTful API を使用してデータをフロントエンドへ送信すること。
-- CMS で projectList と projectDetial の内容を編集／追加できること。
-
-#### API Format
-
-```plain
-/// 各 Project Header の情報
-export const profolioDetail = [{
-  params: '1',
-  period: '202008~202101',
-  bannerImg: '',
-  contentImg: '',
-  article: [
-    {'title': 'ProjectDetail.Title','content': 'ProjectDetail.content'},
-    {'title': 'ProjectDetail.Title','content': 'ProjectDetail.content'},
-    {'title': 'ProjectDetail.Title','content': 'ProjectDetail.content'},
-  ],
-  character: 'UI/UX designer',
-  tags: ['Skill.WebDesign','Skill.RWD','Skill.HTML5','Skill.SCSS','Skill.jQuery','Skill.JavaScript'],
-  isSideProject: false
-}]
+```text
+Google Sheets に内容を追加する
+=> プロジェクト側で Google Sheets API を呼び出し、多言語の `.json` ファイルを取得する
+=> 新しい view page を追加し、style を調整して内容を表示する
 ```
 
-```plain
-/// フロントエンドの Project List の形式
-export interface CardInfoDetail {
-  name: string
-  bannerImg: string
-  title: string
-  link?: string
-  team: string
-  period: string
-  character: string
-  tags: string[]
-  sideProject: boolean
-}
-export const designCardInfo: CardInfoDetail[] = [
-  {
-    name: 'BahaWorld',
-    bannerImg: 'braver_banner.png',
-    title: 'HomeProfolio.BahaWallTitle',
-    link: '',
-    team: 'Team.BahamutProduce',
-    character: 'Character.UIUXDesigner',
-    period: '2019',
-    tags: ['Skill.UIAndUX', 'Skill.Sketch', 'Skill.iOS', 'Skill.Andriod', 'Skill.AI', 'Skill.PS'],
-    sideProject: false
-  },{ 
-    name: 'BahaECShop',
-    bannerImg: 'shopping_banner.png',
-    title: 'HomeProfolio.BShoppingMallTitle',
-    link: '',
-    team: 'Team.BahamutEC',
-    period: '2020',
-    character: 'Character.UIUXDesigner',
-    tags: ['Skill.WebDesign', 'Skill.RWD', 'Skill.HTML5', 'Skill.SCSS', 'Skill.jQuery'],
-    sideProject: false
-  },{
-    // params: 'https://www.behance.net/gallery/125095859/_',
-    name: 'AnimeDetail',
-    bannerImg: 'anime_banner.png',
-    title: 'HomeProfolio.AnimePlateFormTitle',
-    link: '',
-    team: 'Team.BahamutAnime',
-    period: '2021',
-    character: 'Character.UIUXDesigner',
-    tags: ['Skill.WebDesign', 'Skill.RWD', 'Skill.HTML5', 'Skill.SCSS', 'Skill.jQuery', 'Skill.JavaScript'],
-    sideProject: false
-  }, {
-    name: 'ECWebsite',
-    bannerImg: 'pic_vue.png',
-    title: 'HomeProfolio.ShinchiECLayout',
-    link: '',
-    team: 'Team.ShinchiDevelope',
-    character: 'Character.FEDeveloper',
-    period: '2022',
-    tags: ['Skill.UIAndUX', 'Skill.TypeScript', 'Skill.JavaScript', 'Skill.Vue3', 'Skill.Vite', 'Skill.UNOCSS'],
-    sideProject: false
-  }, {
-    name: 'FortuneSeeking',
-    bannerImg: 'foutune_cardbackground.png',
-    title: 'HomeProfolio.FortuneSeeking',
-    link: '',
-    team: 'Team.Myself',
-    character: 'Character.FEDeveloper',
-    period: '2023',
-    tags: ['Skill.TypeScript', 'Skill.JavaScript', 'Skill.Vue3', 'Skill.Vite', 'Skill.AI', 'Skill.PS'],
-    sideProject: true
-  }
-].reverse()
+### 問題点
+
+1. 内容を追加するたびに新しい view page を追加する必要があり、style の調整も必要だった。
+2. Google Sheets は記事編集ツールとして適しておらず、Markdown の Preview もできなかった。
+3. 内容の調整プロセスが複雑だった。多言語を維持するために、記事を複数の `KeyName` に分割して管理する必要があった。
+
+### 要件
+
+* CMS 上で作品集の記事本文を追加・編集できること。
+* CMS 上で `projectList` と `projectDetail` の内容を編集・追加・削除できること。
+* CMS にバージョン履歴があること。
+* コンテンツ形式では Article と Metadata を分離すること。
+
+### 解決方法
+
+#### Cloudflare-based content flow へ変更
+
+* Cloudflare Pages Functions で `/api/projects` を提供する。
+* API 側で project list を整理する。
+* フロントエンドは整理済みの JSON だけを扱う。
+* detail page は slug に応じて対応する記事を読み込む。
+* metadata は記事の一部として扱う。たとえば `title`、`period`、`tags`、`bannerImg` などを以下のように定義する。
+
+```yaml
+---
+name: build-a-cms-service
+title: Build a CMS Service
+bannerImg: /uploads/banner.png
+period: 2026
+character: Frontend Developer
+tags:
+  - Vue
+  - Cloudflare
+  - CMS
+sideProject: true
+---
 ```
 
-# 制約
+#### フロントエンド開発
 
-- 開発者（私）はバックエンド開発者ではないため、複雑すぎるもの、大規模なもの、または深いバックエンド知識を必要とするツールや開発作業は実行できません。
-- 3日以内に完了する必要があります。
-- 既存サービスの利用を積極的に検討しますが、有料サービスは対象外とします。
+* CMS fetch API handler を追加する。
+* Pagination Components を追加する。
+* Route が static project と CMS project を管理できる View を追加する。
 
-# フロー
+### 成果
 
-- [x] 使用するサービスまたは開発手段を選定する
-    - [x] 一時的に Decap CMS を採用し、将来的には CMS を Directus（Docker）へ移行する
-- [ ] 開発手順を選定する
-    - [x] 新しい repo “portfolio-content” を作成する
-    - [ ] Decap CMS Sveltia CMS を設定する
-    - [ ] GitHub で OAuth App を作成する
-`GitHub → Settings → Developer settings → OAuth Apps → New OAuth App` へ移動する欄位填入Application namejohnresume2023Homepage URL`https://あなたのサイトURL`Authorization callback URL`https://あなたのサイトURL/admin`**Client ID** と **Client Secret** を取得する
-- [ ] 実装
-- [ ] Unit Test と E2E Test
-- [ ] Release
+* metadata と content を同じ場所で管理できるため、データを保守しやすくなった。
+* データは GitHub の content repo に保存されるため、すべての変更履歴を追跡できる。
+* 将来的に Cloudflare KV / R2 / D1 と連携できる。

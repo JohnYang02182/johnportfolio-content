@@ -14,128 +14,68 @@ tags:
 sideProject: true
 ---
 
-# Description
+### Description
 
-The current projectDetail content management flow is:
+At the beginning, portfolio articles were managed entirely through Google Sheets.
 
-Add content in Google Sheets ⇒ The project calls the Google Sheets API to retrieve multilingual .json files ⇒ Add a new view page and display the content using `${key.name}`.
+This approach was convenient when the amount of data was small and the content was simple. However, as the portfolio content increased and multilingual maintenance became necessary, Google Sheets quickly became unintuitive.
 
-#### Pain Points:
-
-- A new view page needs to be added every time new content is added, and the style also needs to be adjusted.
-- Google Sheets is not suitable as an editor for adding articles.
-
-# Functional Requirements
-
-- The CMS shall allow portfolio body content to be added and edited in .md format.
-- The CMS shall be able to store portfolio content in three languages: Japanese, English, and Traditional Chinese.
-- Data shall be sent to the front end through a RESTful API.
-- The CMS shall allow editing and adding content for projectList and projectDetial.
-
-#### API Format
+The previous `projectDetail` content management flow was:
 
 ```plain
-/// Information for each Project Header
-export const profolioDetail = [{
-  params: '1',
-  period: '202008~202101',
-  bannerImg: '',
-  contentImg: '',
-  article: [
-    {'title': 'ProjectDetail.Title','content': 'ProjectDetail.content'},
-    {'title': 'ProjectDetail.Title','content': 'ProjectDetail.content'},
-    {'title': 'ProjectDetail.Title','content': 'ProjectDetail.content'},
-  ],
-  character: 'UI/UX designer',
-  tags: ['Skill.WebDesign','Skill.RWD','Skill.HTML5','Skill.SCSS','Skill.jQuery','Skill.JavaScript'],
-  isSideProject: false
-}]
+Add content in Google Sheets
+=> Fetch multilingual `.json` files through the Google Sheets API in the project
+=> Add a new view page and adjust the styles to display the content
+
 ```
+
+### Problems
+
+1. Every time new content was added, a new view page also had to be created, and the styles had to be adjusted.
+2. Google Sheets is not suitable as an article editor and cannot preview Markdown.
+3. The content editing process was complicated. To maintain multilingual content, articles had to be split into multiple `KeyName` entries.
+
+### Requirements
+
+- The CMS must allow adding and editing portfolio article content.
+- The CMS must allow editing, adding, and deleting `projectList` and `projectDetail` content.
+- The CMS must provide version history.
+- The content format must separate Article and Metadata.
+
+### Solution
+
+#### Switch to a Cloudflare-based content flow
+
+- Use Cloudflare Pages Functions to provide `/api/projects`.
+- Let the API organize the project list.
+- The frontend only consumes clean JSON.
+- The detail page reads the corresponding article based on the slug.
+- Metadata becomes part of the article, such as `title`, `period`, `tags`, and `bannerImg`, as shown below:
 
 ```plain
-/// Format of the front-end Project List
-export interface CardInfoDetail {
-  name: string
-  bannerImg: string
-  title: string
-  link?: string
-  team: string
-  period: string
-  character: string
-  tags: string[]
-  sideProject: boolean
-}
-export const designCardInfo: CardInfoDetail[] = [
-  {
-    name: 'BahaWorld',
-    bannerImg: 'braver_banner.png',
-    title: 'HomeProfolio.BahaWallTitle',
-    link: '',
-    team: 'Team.BahamutProduce',
-    character: 'Character.UIUXDesigner',
-    period: '2019',
-    tags: ['Skill.UIAndUX', 'Skill.Sketch', 'Skill.iOS', 'Skill.Andriod', 'Skill.AI', 'Skill.PS'],
-    sideProject: false
-  },{ 
-    name: 'BahaECShop',
-    bannerImg: 'shopping_banner.png',
-    title: 'HomeProfolio.BShoppingMallTitle',
-    link: '',
-    team: 'Team.BahamutEC',
-    period: '2020',
-    character: 'Character.UIUXDesigner',
-    tags: ['Skill.WebDesign', 'Skill.RWD', 'Skill.HTML5', 'Skill.SCSS', 'Skill.jQuery'],
-    sideProject: false
-  },{
-    // params: 'https://www.behance.net/gallery/125095859/_',
-    name: 'AnimeDetail',
-    bannerImg: 'anime_banner.png',
-    title: 'HomeProfolio.AnimePlateFormTitle',
-    link: '',
-    team: 'Team.BahamutAnime',
-    period: '2021',
-    character: 'Character.UIUXDesigner',
-    tags: ['Skill.WebDesign', 'Skill.RWD', 'Skill.HTML5', 'Skill.SCSS', 'Skill.jQuery', 'Skill.JavaScript'],
-    sideProject: false
-  }, {
-    name: 'ECWebsite',
-    bannerImg: 'pic_vue.png',
-    title: 'HomeProfolio.ShinchiECLayout',
-    link: '',
-    team: 'Team.ShinchiDevelope',
-    character: 'Character.FEDeveloper',
-    period: '2022',
-    tags: ['Skill.UIAndUX', 'Skill.TypeScript', 'Skill.JavaScript', 'Skill.Vue3', 'Skill.Vite', 'Skill.UNOCSS'],
-    sideProject: false
-  }, {
-    name: 'FortuneSeeking',
-    bannerImg: 'foutune_cardbackground.png',
-    title: 'HomeProfolio.FortuneSeeking',
-    link: '',
-    team: 'Team.Myself',
-    character: 'Character.FEDeveloper',
-    period: '2023',
-    tags: ['Skill.TypeScript', 'Skill.JavaScript', 'Skill.Vue3', 'Skill.Vite', 'Skill.AI', 'Skill.PS'],
-    sideProject: true
-  }
-].reverse()
+---
+name: build-a-cms-service
+title: Build a CMS Service
+bannerImg: /uploads/banner.png
+period: 2026
+character: Frontend Developer
+tags:
+  - Vue
+  - Cloudflare
+  - CMS
+sideProject: true
+---
+
 ```
 
-# Constraints
+#### Frontend Development
 
-- The developer, myself, is not a back-end developer, so tools or development tasks that are too complex, large-scale, or require deep back-end knowledge cannot be implemented.
-- The task must be completed within 3 days.
-- Existing services will be actively considered, but paid services will not be considered.
+- Add a CMS fetch API handler.
+- Add Pagination Components.
+- Add a View that lets the Route manage both static projects and CMS projects.
 
-# Flow
+### Results
 
-- [x] Select the service or development approach to use
-    - [x] Temporarily use Decap CMS, and migrate the CMS to Directus (Docker) in the future
-- [ ] Select the development steps
-    - [x] Create a new repo named “portfolio-content”
-    - [ ] Configure Decap CMS Sveltia CMS
-    - [ ] Create an OAuth App on GitHub
-Go to `GitHub → Settings → Developer settings → OAuth Apps → New OAuth App`FieldValueApplication namejohnresume2023Homepage URL`https://your-website-url`Authorization callback URL`https://your-website-url/admin`Obtain the **Client ID** and **Client Secret**
-- [ ] Implementation
-- [ ] Unit Test and E2E Test
-- [ ] Release
+- Metadata and content are stored together, making the data easier to maintain.
+- Data is stored in GitHub, and the content repo can track every modification.
+- Cloudflare KV / R2 / D1 can be integrated in the future.

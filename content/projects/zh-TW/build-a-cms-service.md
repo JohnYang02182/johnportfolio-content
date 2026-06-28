@@ -16,99 +16,62 @@ sideProject: true
 
 # 描述
 
-現在的 projectDetail 內容管理是
-[:.text-primary]
-在 Google Sheets 新增內容 ⇒ 在專案呼叫透過 Google Sheets API 取得多語系的 .json 檔案 ⇒ 新增一個 view page 用 ${[key.name](http://key.name)} 的方式將內容顯示。
+一開始 portfolio article 統一透過 Google Sheets 管理。
+這個方式在資料量少、內容單純時很方便，但當 portfolio 內容開始變多且要顧及多語系的維護時，Google Sheets 很快就變得很不直覺。
+
+過去的 projectDetail 內容管理是
+
+在 Google Sheets 新增內容 
+⇒ 在專案呼叫透過 Google Sheets API 取得多語系的 .json 檔案 
+⇒ 新增一個 view page 調整 Style 將內容顯示。
 
 ::: div {.content-wrapper}
 
 ### 問題:
 
 1. 每新增一次內容就會需要新增 view page，style 也需要調整。
-2. Google Sheets 不適合用來當作新增文章的編輯器。
-3. 調整內容過程複雜
+2. Google Sheets 不適合用來當作文章編輯器，也無法 Preview Markdown。
+3. 調整內容過程複雜，為了維護多語系，要將文章拆成好幾個 KeyName 維護。
 
-# 需求
-
-### Functional Requirements
+### 需求
 
 - 在 CMS 必須能夠新增/編輯作品集內文內容。
 - 在 CMS 必須能夠編輯/新增/刪除 projectList 與 projectDetial 的內容。
 - CMS 必須有版本紀錄
+- 內容格式必須將 Article 與 Metadata 分離
 
-### Nonfunctional Requirements
+### 解決方法
 
-- 必須提供自動化 CICD ，部屬失敗率不能超過 90%
-- 必須能夠檢視平台的 Log
-- 必須切分 Preview 環境與 Product 環境
-- 內容格式必須是 Markdown 格式，結構含有 Metadata、Content
+#### 改成 Cloudflare-based content flow
 
-#### API Format
+- 用 Cloudflare Pages Functions 提供 /api/projects
+- 由 API 負責整理 project list
+- 前端只吃乾淨的 JSON
+- detail page 依 slug 讀取對應文章
+- metadata 變成文章的一部分，例如 title、period、tags、bannerImg，像是以下：
 
-```plain
-/// 每個 Project Header 的資訊
-export const profolioDetail = [{
-  params: '1',
-  period: '202008~202101',
-  bannerImg: '',
-  contentImg: '',
-  article: [
-    {'title': 'ProjectDetail.Title','content': 'ProjectDetail.content'},
-    {'title': 'ProjectDetail.Title','content': 'ProjectDetail.content'},
-    {'title': 'ProjectDetail.Title','content': 'ProjectDetail.content'},
-  ],
-  character: 'UI/UX designer',
-  tags: ['Skill.WebDesign','Skill.RWD','Skill.HTML5','Skill.SCSS','Skill.jQuery','Skill.JavaScript'],
-  isSideProject: false
-}]
+```
+---
+name: build-a-cms-service
+title: Build a CMS Service
+bannerImg: /uploads/banner.png
+period: 2026
+character: Frontend Developer
+tags:
+  - Vue
+  - Cloudflare
+  - CMS
+sideProject: true
+---
 ```
 
-```markdown
-/// 前端 Project List 的格式
-export interface CardInfoDetail {
-  name: string
-  bannerImg: string
-  title: string
-  link?: string
-  team: string
-  period: string
-  character: string
-  tags: string[]
-  sideProject: boolean
-}
-export const designCardInfo: CardInfoDetail[] = [
-  {
-    name: 'ECWebsite',
-    bannerImg: 'pic_vue.png',
-    title: 'HomeProfolio.ShinchiECLayout',
-    link: '',
-    team: 'Team.ShinchiDevelope',
-    character: 'Character.FEDeveloper',
-    period: '2022',
-    tags: ['Skill.UIAndUX', 'Skill.TypeScript', 'Skill.JavaScript', 'Skill.Vue3', 'Skill.Vite', 'Skill.UNOCSS'],
-    sideProject: false
-  }
-]
-```
+#### 前端開發
+- 新增 CMS fetch API handler
+- 新增 Pagination Components
+- 新增 View 讓 Route 管理 static project 與 CMS project
 
-# 限制
+### 成果
 
-- 積極考慮的使用現成已有的服務，但暫時不考慮付費。
-- 後端環境使用 Node.js。
-- 前端環境：
-    - TypeScript、Vue3 Composition API。
-    - 後續使用全端框架 NUXT 重構。
-
-# 解決問題
-
-- 選定使用服務
-    - 使用 Cloudflare 設定前台與 CMS。
-    - 使用 
-- [ ] 選定開發步驟
-    - [x] 新開 repo “portfolio-content”
-    - [x] 設定 ~~Decap CMS~~ Sveltia CMS
-    - [x] 在 GitHub 建立 OAuth App
-    - [x] 設定 Netlify 存取權限
-- [ ] 執行
-- [ ] Unit Test 與 E2E Test
-- [ ] Release
+- metadata 和 content 放在一起，使資料更容易維護
+- 資料存放在 GitHub - content repo 可以追蹤每一次修改
+- 未來可接 Cloudflare KV / R2 / D1
